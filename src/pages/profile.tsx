@@ -63,7 +63,7 @@ export default function Perfil() {
 
     try {
       await updateShare(destination);
-      await fetchUserShares();
+      fetchUserShares();
     } catch (error) {
       console.error(`Erro ao incrementar acesso para ${destination}:`, error);
     }
