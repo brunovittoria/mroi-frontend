@@ -18,7 +18,7 @@ export default function Login() {
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       await handleLogin(data.email, data.password);
-      router.push('/perfil');
+      router.push('/profile');
     } catch (err) {
       setError('Login falhou. Verifique suas credenciais.');
     }

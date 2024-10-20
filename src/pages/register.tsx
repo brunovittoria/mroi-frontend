@@ -18,7 +18,7 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormInputs) => {
     try {
       await registerUser(data.name, data.email, data.password, data.phone);
-      router.push('/perfil');
+      router.push('/profile');
     } catch (err) {
       console.error('Erro no registro:', err);
     }

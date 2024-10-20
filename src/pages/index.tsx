@@ -11,7 +11,7 @@ export default function Home() {
     if (!authToken) {
       router.push('/login');
     } else {
-      router.push('/perfil');
+      router.push('/profile');
     }
   }, [router]);
 
