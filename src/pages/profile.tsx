@@ -22,23 +22,14 @@ interface Share {
 export default function Perfil() {
   const { data: profile } = useRequestSWR<UserProfile>({ url: '/profile' });
   const router = useRouter();
-  const [youtubeAccesses, setYoutubeAccesses] = useState<number>(0);
-  const [githubAccesses, setGithubAccesses] = useState<number>(0);
+  const [shares, setShares] = useState<Share[]>();
 
   const fetchUserShares = async () => {
     try {
       const data = await getShares();
       const shares = data.shares;
 
-      const youtubeShare = shares.find(
-        (share) => share.destination === 'YouTube'
-      );
-      const githubShare = shares.find(
-        (share) => share.destination === 'GitHub'
-      );
-
-      setYoutubeAccesses(youtubeShare?.click_count || 0);
-      setGithubAccesses(githubShare?.click_count || 0);
+      setShares(shares);
     } catch (error) {
       console.error('Erro ao buscar os shares:', error);
     }
@@ -54,11 +45,7 @@ export default function Perfil() {
   };
 
   const handleShareClick = async (destination: string) => {
-    const url =
-      destination === 'YouTube'
-        ? 'https://www.youtube.com'
-        : 'https://www.github.com';
-
+    const url = `https://${destination.toLowerCase()}.com`;
     window.open(url, '_blank');
 
     try {
@@ -103,10 +90,6 @@ export default function Perfil() {
           </Typography>
           <Typography>Email: {profile?.user?.email}</Typography>
           <Typography>Número: {profile?.user?.phone}</Typography>
-          <Typography sx={{ marginTop: 2 }}>
-            Youtube: {youtubeAccesses} acessos
-          </Typography>
-          <Typography>GitHub: {githubAccesses} acessos</Typography>
         </CardContent>
       </Card>
       <Button
@@ -118,20 +101,20 @@ export default function Perfil() {
         Logout
       </Button>
       <Box sx={{ display: 'flex', gap: 2, marginTop: 2 }}>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => handleShareClick('YouTube')}
-        >
-          Acessar YouTube
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => handleShareClick('GitHub')}
-        >
-          Acessar GitHub
-        </Button>
+        {shares?.map((share) => (
+          <Box>
+            <Typography sx={{ marginTop: 2 }}>
+              {share.destination} : {share.click_count} acessos
+            </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleShareClick(share.destination)}
+            >
+              Acessar {share.destination}
+            </Button>
+          </Box>
+        ))}
       </Box>
     </Box>
   );
